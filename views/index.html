@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block headers %}
+  <title>Causerie</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="page-header">
+        <h1>
+          Causerie
+          <a href="/causerie_add" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          </a>
+        </h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {% if causeries %}
+          {% for causerie in causeries %}
+            <p>
+              <a href="/causerie/{{ causerie.slug }}">{{causerie.title}}</a>
+            </p>
+          {% endfor %}
+        {% else %}
+          <h2 style="text-align: center">
+            <span class="glyphicon glyphicon-asterisk" aria-hidden="true">
+            </span><br/>
+            (No causerie.)
+          </h2>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
