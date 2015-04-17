@@ -19,11 +19,12 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        {% if causerie.posts.length %}
-          {% for post in causerie.posts %}
+        {% if posts.length %}
+          {% for post in posts %}
             <p>
+              <span class="label label-default">{{ post.updatedAt }}</span>
               {{ post.content }}
-              <br/><small>{{ post.author }}</small>
+              <small class="pull-right">{{ post.author }}</small>
             </p>
           {% endfor %}
         {% else %}
@@ -36,7 +37,7 @@
       </div>
       <div class="col-md-6">
         <form method="post" action="/causerie/{{ causerie.slug }}">
-          {{ postForm | safe }}
+          {{ form | safe }}
           <input class="btn btn-success pull-right" type="submit" value="Done">
         </form>
       </div>
