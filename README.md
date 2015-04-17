@@ -1,6 +1,6 @@
 # Causerie
 
-Helps Teams to provide easy updates.
+Helps teams to provide easy updates.
 
 ## Install
 
@@ -13,3 +13,7 @@ $ npm install
 ```bash
 $ npm start
 ```
+
+## Use
+
+Check [localhost:3000](http://localhost:3000) out.
