@@ -20,9 +20,12 @@
       <div class="col-md-12">
         {% if causeries %}
           {% for causerie in causeries %}
-            <p>
-              <a href="/causerie/{{ causerie.slug }}">{{causerie.title}}</a>
-            </p>
+            <div class="col-md-4">
+              <h3>
+                <a href="/causerie/{{ causerie.slug }}">{{ causerie.title }}</a>
+              </h3>
+              <p>{{ causerie.description }}</p>
+            </div>
           {% endfor %}
         {% else %}
           <h2 style="text-align: center">
