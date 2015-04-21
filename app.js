@@ -4,8 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
 var nunjucks = require('nunjucks');
 var marked = require('marked');
+var dateFormat = require('dateformat');
 
 var index = require('./routes/index');
 var causerie = require('./routes/causerie');
@@ -22,6 +24,9 @@ var env = nunjucks.configure('views', {
 
 // add markdown filter
 env.addFilter('markdown', marked);
+env.addFilter('date', function(timestamp) {
+  return dateFormat(new Date(timestamp), 'yyyy-mm-dd hh:MM:ss');
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
