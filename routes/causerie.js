@@ -18,7 +18,12 @@ router.get('/causerie/:slug', function(req, res) {
     }
 
     // All good
-    causerie.getPosts().then(function(posts) {
+    causerie.getPosts({
+      order: [
+        // Fresh Posts first
+        ['createdAt', 'DESC']
+      ]
+    }).then(function(posts) {
       res.render('causerie', {
         causerie: causerie,
         posts: posts,
