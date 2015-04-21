@@ -26,7 +26,7 @@
                   {{ causerie.title | capitalize }}
                 </a>
               </h3>
-              <p>{{ causerie.description }}</p>
+              {{ causerie.description | markdown | safe }}
             </div>
           {% endfor %}
         {% else %}

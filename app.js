@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nunjucks = require('nunjucks');
+var marked = require('marked');
 
 var index = require('./routes/index');
 var causerie = require('./routes/causerie');
@@ -14,10 +15,13 @@ var app = express();
 
 // view engine setup
 app.set('view engine', 'html');
-nunjucks.configure('views', {
+var env = nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
+
+// add markdown filter
+env.addFilter('markdown', marked);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));

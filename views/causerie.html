@@ -21,11 +21,9 @@
       <div class="col-md-6">
         {% if posts.length %}
           {% for post in posts %}
-            <p>
               <span class="label label-default">{{ post.updatedAt }}</span>
-              {{ post.content }}
-              <small class="pull-right">{{ post.author }}</small>
-            </p>
+              {{ post.author }}
+              {{ post.content | markdown | safe }}
           {% endfor %}
         {% else %}
           <h2 style="text-align: center">
