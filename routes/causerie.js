@@ -18,7 +18,7 @@ router.get('/causerie/:slug', function(req, res) {
     }
 
     // All good
-    withPosts(req.params.slug, function(posts) {
+    causerie.getPosts().then(function(posts) {
       res.render('causerie', {
         causerie: causerie,
         posts: posts,
@@ -39,12 +39,12 @@ router.post('/causerie/:slug', function(req, res) {
         models.Post.create({
           author: form.data.author || null,
           content: form.data.content,
-          causerie_id: causerie.slug
+          CauserieSlug: causerie.slug
         }).catch(function(error) {
           postFormError(pform, res, error);
         }).then(function(post) {
           // All good
-          withPosts(causerie.slug, function(posts) {
+          causerie.getPosts().then(function(posts) {
             res.render('causerie', {
               causerie: causerie,
               posts: posts,
@@ -61,23 +61,13 @@ router.post('/causerie/:slug', function(req, res) {
   });
 });
 
-var withCauserie = function(slug, func) {
+var withCauserie = function(slug, callback) {
   models.Causerie.find({
     where: {
       slug: slug
     }
   }).then(function(causerie) {
-    func(causerie);
-  });
-};
-
-var withPosts = function(slug, func) {
-  models.Post.findAll({
-    where: {
-      causerie_id: slug
-    }
-  }).then(function(posts) {
-    func(posts);
+    callback(causerie);
   });
 };
 
