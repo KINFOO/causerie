@@ -20,7 +20,9 @@
   },
   "description": "Help teams to provide easy updates.",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "jsfmt": "^0.4.1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/KINFOO/causerie.git"
