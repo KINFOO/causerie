@@ -36,33 +36,47 @@ router.get('/causerie/:slug', function(req, res) {
 router.post('/causerie/:slug', function(req, res) {
   withCauserie(req.params.slug, function(causerie) {
 
-    // Validate form
-    pform = postForm(req.body);
-    pform.handle(req, {
-      success: function(form) {
-        // Save Causerie
-        models.Post.create({
-          author: form.data.author || null,
-          content: form.data.content,
-          CauserieSlug: causerie.slug
-        }).catch(function(error) {
-          postFormError(pform, res, error);
-        }).then(function(post) {
-          // All good
-          causerie.getPosts().then(function(posts) {
+    // Wrong causerie slug
+    if (!causerie) {
+      res.redirect('/');
+    }
+
+    causerie.getPosts({
+      order: [
+        // Fresh Posts first
+        ['createdAt', 'DESC']
+      ]
+    }).then(function(posts) {
+
+      // Validate form
+      pform = postForm(req.body);
+      pform.handle(req, {
+
+        // All good
+        success: function(form) {
+          // Save Causerie
+          models.Post.create({
+            author: form.data.author || null,
+            content: form.data.content,
+            CauserieSlug: causerie.slug
+          }).catch(function(error) {
+            postFormError(pform, res, causerie, posts, error);
+          }).then(function(post) {
+
+            // Add fresh post to list to render
+            posts.unshift(post);
             res.render('causerie', {
               causerie: causerie,
               posts: posts,
               form: pform.toHTML(bootstrapField)
             });
           });
-        });
-      },
-      error: function(form) {
-        postFormError(form, res);
-      }
+        },
+        error: function(form) {
+          postFormError(form, res, causerie, posts);
+        }
+      });
     });
-
   });
 });
 
@@ -97,9 +111,11 @@ var postForm = function(values) {
   return pform;
 };
 
-var postFormError = function(form, res, error) {
+var postFormError = function(form, res, causerie, posts, error) {
   var errorHTML = (error || '') + form.fields.content.errorHTML();
   res.render('causerie', {
+    causerie: causerie,
+    posts: posts,
     error: errorHTML,
     form: form.toHTML(bootstrapField)
   });
