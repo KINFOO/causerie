@@ -24,12 +24,14 @@ var env = nunjucks.configure('views', {
 
 // add markdown filter
 env.addFilter('markdown', marked);
+
+// date filter
 env.addFilter('date', function(timestamp) {
   return dateFormat(new Date(timestamp), 'yyyy-mm-dd hh:MM:ss');
 });
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+// Favicon
+app.use(favicon(path.join(__dirname, 'public', 'img', 'causerie.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
