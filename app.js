@@ -5,6 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var debug = require('debug')('causerie:server');
+var http = require('http');
+var models = require('./models');
+
 var nunjucks = require('nunjucks');
 var marked = require('marked');
 var dateFormat = require('dateformat');
@@ -76,4 +80,48 @@ app.use(function(err, req, res, next) {
   });
 });
 
-module.exports = app;
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+var server = http.createServer(app);
+var port = parseInt(process.env.PORT, 10) || 3000;
+app.set('port', port);
+models.sequelize.sync().then(function() {
+	server.listen(port);
+	server.on('error', onError);
+	server.on('listening', onListening);
+});
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+function onError(error) {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
+
+	var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+function onListening() {
+	var addr = server.address();
+	var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+	debug('Listening on ' + bind);
+}
