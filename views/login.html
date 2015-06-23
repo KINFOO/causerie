@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block headers %}
+  <title>Fill my name</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-offset-3 col-md-6 page-header">
+        <h1>
+          <a
+          {% if causerieSlug %}
+            href="/causerie/{{ causerieSlug }}"
+          {% else %}
+            href="/"
+          {% endif %}
+          >
+            <span class="glyphicon glyphicon-menu-left" aria-hidden="true">
+            </span>
+          </a>
+          Remember me<br/>
+          <small>Automatic name field pre-provisionning :)</small>
+        </h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-offset-3 col-md-6">
+        {% if error %}
+          <div class="alert alert-danger" role="alert">{{ error | safe }}</div>
+        {% endif %}
+        <form method="post" action="/login/{{ causerieSlug }}">
+          {{ form | safe }}
+          <input class="btn btn-success pull-right" type="submit" value="Remember">
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

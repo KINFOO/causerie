@@ -18,7 +18,7 @@ router.get('/causerie_add', function(req, res) {
 
 router.post('/causerie_add', function(req, res) {
   // Validate form
-  cform = causerieForm(req.body);
+  var cform = causerieForm(req.body);
   cform.handle(req, {
     success: function(form) {
       // Save Causerie
@@ -34,7 +34,7 @@ router.post('/causerie_add', function(req, res) {
       });
     },
     error: function(form) {
-      causerieFormOnError(form, res);
+      causerieFormOnError(cform, res);
     }
   });
 });

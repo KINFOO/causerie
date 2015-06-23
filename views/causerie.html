@@ -41,6 +41,9 @@
         <form method="post" action="/causerie/{{ causerie.slug }}">
           {{ form | safe }}
           <input class="btn btn-success pull-right" type="submit" value="Done">
+          <a class="btn btn-default pull-right" href="/login/{{ causerie.slug }}">
+            Save my name
+          </a>
         </form>
       </div>
     </div>

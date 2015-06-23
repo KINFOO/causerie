@@ -13,9 +13,12 @@ var nunjucks = require('nunjucks');
 var marked = require('marked');
 var dateFormat = require('dateformat');
 
-var index = require('./routes/index');
+var passport = require('passport');
+
 var causerie = require('./routes/causerie');
 var causerieEdit = require('./routes/causerie-edit');
+var index = require('./routes/index');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -41,13 +44,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+
 app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', index);
 app.get('/causerie/:slug', causerie);
 app.post('/causerie/:slug', causerie);
 app.get('/causerie_add', causerieEdit);
 app.post('/causerie_add', causerieEdit);
+app.get('/login', login);
+app.get('/login/:slug', login);
+app.post('/login', login);
+app.post('/login/:slug', login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -87,41 +97,41 @@ var server = http.createServer(app);
 var port = parseInt(process.env.PORT, 10) || 3000;
 app.set('port', port);
 models.sequelize.sync().then(function() {
-	server.listen(port);
-	server.on('error', onError);
-	server.on('listening', onListening);
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
 });
 
 /**
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
-	if (error.syscall !== 'listen') {
-		throw error;
-	}
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-	var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
-	// handle specific listen errors with friendly messages
-	switch (error.code) {
-		case 'EACCES':
-			console.error(bind + ' requires elevated privileges');
-			process.exit(1);
-			break;
-		case 'EADDRINUSE':
-			console.error(bind + ' is already in use');
-			process.exit(1);
-			break;
-		default:
-			throw error;
-	}
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 }
 
 /**
  * Event listener for HTTP server "listening" event.
  */
 function onListening() {
-	var addr = server.address();
-	var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-	debug('Listening on ' + bind);
+  var addr = server.address();
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  debug('Listening on ' + bind);
 }
